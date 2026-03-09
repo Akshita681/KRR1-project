@@ -42,18 +42,18 @@ How the System Works
 
 Example Career Recommendations
 The system may recommend careers such as:
-. Machine Learning Engineer
-. Software Developer
-. Data Analyst
-. Web Developer
-. Cyber Security Specialist
+1. Machine Learning Engineer
+2. Software Developer
+3. Data Analyst
+4. Web Developer
+5. Cyber Security Specialist
 These recommendations are generated based on logical rules defined in the Prolog knowledge base.
 
 Future Enhancements
-. Add more career rules to improve recommendations.
-. Integrate machine learning for better prediction accuracy.
-. Improve the user interface and visualization.
-. Add speech-based interaction for accessibility.
+1. Add more career rules to improve recommendations.
+2. Integrate machine learning for better prediction accuracy.
+3. Improve the user interface and visualization.
+4. Add speech-based interaction for accessibility.
 
 Conclusion
 The Orchestrated Hybrid Intelligence System demonstrates how different intelligent components can be coordinated to create a smart decision-support system. It highlights the power of combining rule-based reasoning with modern programming techniques.
