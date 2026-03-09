@@ -1,0 +1,61 @@
+:- dynamic interest/1.
+:- dynamic skill/1.
+:- dynamic preference/1.
+
+career(machine_learning_engineer) :-
+    interest(ai),
+    skill(advanced),
+    preference(research).
+
+career(ai_engineer) :-
+    interest(ai),
+    skill(intermediate),
+    preference(industry).
+
+career(web_developer) :-
+    interest(web),
+    skill(intermediate),
+    preference(startup).
+
+career(data_scientist) :-
+    interest(data),
+    skill(advanced),
+    preference(research).
+
+career(data_analyst) :-
+    interest(data),
+    skill(beginner),
+    preference(industry).
+
+career(cyber_security_analyst) :-
+    interest(cyber),
+    skill(intermediate),
+    preference(industry).
+
+career(iot_engineer) :-
+    interest(iot),
+    skill(advanced),
+    preference(startup).
+
+explain(machine_learning_engineer,
+ 'Advanced AI skills with research interest suit ML Engineer').
+
+explain(ai_engineer,
+ 'AI interest with industry focus suits AI Engineer').
+
+explain(web_developer,
+ 'Web skills with startup mindset suit Web Developer').
+
+explain(data_scientist,
+ 'Strong data skills and research interest suit Data Scientist').
+
+explain(data_analyst,
+ 'Beginner data skills with industry focus suit Data Analyst').
+
+explain(cyber_security_analyst,
+ 'Cyber interest with industry focus suits Security Analyst').
+
+explain(iot_engineer,
+ 'IoT expertise with startup preference suits IoT Engineer').
+
+

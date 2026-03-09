@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Smart Decision Intelligence Agent</title>
+
+<!-- Chart -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Particles -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    font-family:Segoe UI;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    animation: fadeIn 1.2s ease;
+}
+
+#particles-js{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    z-index:-1;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+.container{
+    width:90%;
+    max-width:900px;
+    background:rgba(255,255,255,0.12);
+    padding:30px;
+    border-radius:20px;
+    color:white;
+    animation: slideUp 1s ease;
+}
+
+@keyframes slideUp{
+    from{transform:translateY(40px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+}
+
+.title{
+    border:2px solid #00ff99;
+    padding:15px;
+    text-align:center;
+    font-size:28px;
+    border-radius:15px;
+    margin-bottom:25px;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow{
+    from{box-shadow:0 0 5px #00ff99;}
+    to{box-shadow:0 0 20px #00ff99;}
+}
+
+/* FORM */
+label{
+    display:block;
+    margin-bottom:6px;
+    margin-top:10px;
+    font-size:16px;
+    color:#00ff99;
+}
+
+select,button{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    margin-bottom:15px;
+    border:none;
+    transition:all 0.3s ease;
+}
+
+select:hover{
+    transform:scale(1.02);
+}
+
+button{
+    background:#00ff99;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.loading{
+    text-align:center;
+    font-size:22px;
+    animation:pulse 1s infinite;
+}
+
+@keyframes pulse{
+    0%{opacity:0.4;}
+    50%{opacity:1;}
+    100%{opacity:0.4;}
+}
+
+.result{
+    background:rgba(0,0,0,0.4);
+    padding:20px;
+    border-radius:15px;
+    animation: slideUp 0.8s ease;
+}
+
+.status{
+    color:red;
+    font-size:22px;
+    font-weight:bold;
+}
+
+canvas{
+    display:block;
+    margin:auto;
+}
+
+#whyBox{
+    display:none;
+    margin-top:15px;
+    background:rgba(255,255,255,0.1);
+    padding:15px;
+    border-radius:12px;
+    animation: slideExplain 0.6s ease;
+}
+
+@keyframes slideExplain{
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<div class="container">
+
+<div class="title">SMART DECISION INTELLIGENCE AGENT</div>
+
+<form method="POST" onsubmit="showLoading()">
+
+<label>Select Your Course / Interest</label>
+<select name="interest" required>
+    <option value="" disabled selected>Choose your interest</option>
+    <option value="ai">Artificial Intelligence</option>
+    <option value="data">Data Science</option>
+    <option value="web">Web Development</option>
+</select>
+
+<label>Select Your Skill Level</label>
+<select name="skill" required>
+    <option value="" disabled selected>Choose your skill level</option>
+    <option value="beginner">Beginner</option>
+    <option value="intermediate">Intermediate</option>
+    <option value="advanced">Advanced</option>
+</select>
+
+<label>Select Your Preference</label>
+<select name="preference" required>
+    <option value="" disabled selected>Choose your preference</option>
+    <option value="research">Research</option>
+    <option value="industry">Industry</option>
+</select>
+
+<button type="submit">Analyze Decision</button>
+</form>
+
+<div id="loading" class="loading" style="display:none;">
+    Analyzing Decision...
+</div>
+
+{% if result %}
+<div class="result">
+<h2>Decision Result</h2>
+<p><b>Career:</b> {{ result.career }}</p>
+<p class="status">{{ result.status }}</p>
+<p><b>Confidence:</b> <span id="conf">0</span>%</p>
+
+<canvas id="chart" width="250" height="250"></canvas>
+
+<button onclick="showWhy()">Why this career?</button>
+
+<div id="whyBox">
+    <p id="whyText"></p>
+</div>
+</div>
+
+<script>
+function showLoading(){
+    document.getElementById("loading").style.display="block";
+}
+
+let target = {{ result.confidence }};
+let count = 0;
+let interval = setInterval(()=>{
+    if(count >= target) clearInterval(interval);
+    document.getElementById("conf").innerText = count;
+    count++;
+},20);
+
+new Chart(document.getElementById("chart"),{
+    type:"doughnut",
+    data:{
+        datasets:[{
+            data:[{{ result.confidence }}, 100-{{ result.confidence }}],
+            backgroundColor:["red","white"]
+        }]
+    },
+    options:{ cutout:"70%", animation:{duration:1500} }
+});
+
+setTimeout(()=>{
+    speechSynthesis.speak(
+        new SpeechSynthesisUtterance(
+            "The suggested career is {{ result.career }}. " +
+            "Confidence is {{ result.confidence }} percent. " +
+            "This career is {{ result.status }}."
+        )
+    );
+},1600);
+
+function showWhy(){
+    let explanation =
+        "Based on your selected interest, skill level, and preference, " +
+        "the system applied knowledge based rules and inferred that " +
+        "{{ result.career }} is the most suitable career option.";
+
+    document.getElementById("whyText").innerText = explanation;
+    document.getElementById("whyBox").style.display = "block";
+    speechSynthesis.speak(new SpeechSynthesisUtterance(explanation));
+}
+</script>
+{% endif %}
+
+</div>
+
+<script>
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 80 },
+    color: { value: "#00ff99" },
+    shape: { type: "circle" },
+    opacity: { value: 0.4 },
+    size: { value: 3 },
+    line_linked: {
+      enable: true,
+      distance: 150,
+      color: "#00ff99",
+      opacity: 0.3,
+      width: 1
+    },
+    move: { enable: true, speed: 1 }
+  }
+});
+</script>
+
+</body>
+</html>
